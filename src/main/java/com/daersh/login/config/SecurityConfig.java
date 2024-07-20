@@ -3,6 +3,7 @@ package com.daersh.login.config;
 import com.daersh.login.jwt.JWTFilter;
 import com.daersh.login.jwt.JWTUtil;
 import com.daersh.login.jwt.LoginFilter;
+import com.daersh.login.user.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +47,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)throws Exception{
+
         return configuration.getAuthenticationManager();
     }
 
@@ -78,16 +80,14 @@ public class SecurityConfig {
         // 경로별 인가 설정
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("user/login").permitAll()
+                        .requestMatchers("user/**").authenticated()
                         .anyRequest().permitAll()
                 );
 
         // filter 추가
         httpSecurity
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
-//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepo), LogoutFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil
-//                , refreshRepo
-        ), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         // 세션설정
         // jwt 방식에서는 세션을 stateless로 관리하기 때문에 이를 설정해야한다.

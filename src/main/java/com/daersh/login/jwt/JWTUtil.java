@@ -35,7 +35,7 @@ public class JWTUtil {
 
     public String getRole(String token) {
         return getPayload(token)
-                .get("role",String.class);
+                .get("userRole",String.class);
     }
 
     private Claims getPayload(String token) {

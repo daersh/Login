@@ -2,13 +2,17 @@ package com.daersh.login.user.service;
 
 
 import com.daersh.login.config.DateParsing;
+import com.daersh.login.jwt.JWTUtil;
 import com.daersh.login.user.aggregate.Role;
 import com.daersh.login.user.aggregate.User;
+import com.daersh.login.user.controller.RequestLoginUser;
 import com.daersh.login.user.controller.RequestRegistUser;
 import com.daersh.login.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -16,13 +20,17 @@ import java.time.LocalDateTime;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JWTUtil jwtUtil;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public String saveUser(RequestRegistUser requestRegistUser) {
 
         try {
@@ -45,7 +53,7 @@ public class UserService {
         return "success";
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByUserEmail(email).orElse(null);
+    public User getUser(String userEmail) {
+        return userRepository.findById(userEmail).orElseThrow();
     }
 }
