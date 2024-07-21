@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -80,13 +81,23 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public AccessRefreshToken processOAuth2User(OAuth2User oAuth2User) {
-        String email = oAuth2User.getAttribute("email");
-        String nickname = oAuth2User.getAttribute("nickname");
+
+        // 사용자 정보 매핑
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+
+        // Kakao의 사용자 정보 API에서 반환된 정보가 중첩된 구조일 경우 이를 풀어헤칩니다.
+        Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+
+        String nickname = (String) profile.get("nickname");
+        String email = (String) account.get("email");
         String role = "ROLE_USER"; // 기본 역할을 설정합니다. 필요에 따라 다르게 설정할 수 있습니다.
 
         // 사용자 정보를 DB에 저장하는 로직을 추가합니다.
-        RequestRegistUser requestRegistUser = new RequestRegistUser(email, null, nickname);
-        userService.saveUser(requestRegistUser);
+        String randomPassword = nickname+ Math.random();
+        RequestRegistUser requestRegistUser = new RequestRegistUser(email, randomPassword, nickname);
+        System.out.println("requestRegistUser = " + requestRegistUser);
+        userService.saveKakaoUser(requestRegistUser);
 
         // JWT 토큰을 생성합니다.
         String accessToken = jwtUtil.createJwt("access", email, nickname, role, 86000000L);

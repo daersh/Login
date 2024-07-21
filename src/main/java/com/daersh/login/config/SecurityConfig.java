@@ -85,8 +85,8 @@ public class SecurityConfig {
         httpSecurity
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/authorization/kakao")
-                        .defaultSuccessUrl("/loginSuccess")
-                        .failureUrl("/loginFailure")
+                        .defaultSuccessUrl("/auth/success")
+//                        .failureUrl("/loginFailure")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )

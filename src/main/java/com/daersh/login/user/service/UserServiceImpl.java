@@ -49,4 +49,12 @@ public class UserServiceImpl implements UserService {
     public User getUser(String userEmail) {
         return userRepository.findById(userEmail).orElseThrow();
     }
+
+    @Override
+    @Transactional
+    public void saveKakaoUser(RequestRegistUser requestRegistUser) {
+        if (!userRepository.existsById(requestRegistUser.getUserEmail())){
+            saveUser(requestRegistUser);
+        }
+    }
 }

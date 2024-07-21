@@ -19,11 +19,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oauth2User.getAttributes();
 
         // Kakao의 사용자 정보 API에서 반환된 정보가 중첩된 구조일 경우 이를 풀어헤칩니다.
-        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+        Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
 
         String nickname = (String) profile.get("nickname");
-        String email = (String) kakaoAccount.get("email");
+        String email = (String) account.get("email");
 
         // 사용자 정보를 반환할 때 추가할 수 있습니다.
         // 예시: CustomOAuth2User를 만들어 필요한 정보를 담아 반환합니다.

@@ -20,4 +20,6 @@ public interface UserService {
     public String saveUser(RequestRegistUser requestRegistUser);
 
     public User getUser(String userEmail);
+
+    void saveKakaoUser(RequestRegistUser requestRegistUser);
 }
