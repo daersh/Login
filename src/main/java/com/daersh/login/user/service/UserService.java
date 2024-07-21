@@ -16,44 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-@Service
-public class UserService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JWTUtil jwtUtil;
+public interface UserService {
+    public String saveUser(RequestRegistUser requestRegistUser);
 
-
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
-
-    @Transactional
-    public String saveUser(RequestRegistUser requestRegistUser) {
-
-        try {
-
-            User user = User.builder()
-                    .userEmail(requestRegistUser.getUserEmail())
-                    .userPassword(passwordEncoder.encode(requestRegistUser.getUserPassword()))
-                    .usernickname(requestRegistUser.getUserNickname())
-                    .userRole(Role.ROLE_USER)
-                    .userEnrollDate(DateParsing.LdtToStr(LocalDateTime.now()))
-                    .userIsDeleted(false)
-                    .userDeleteDate(null)
-                    .build();
-
-            userRepository.save(user);
-        }catch (Exception e){
-            System.err.println("Login Failed");
-            return null;
-        }
-        return "success";
-    }
-
-    public User getUser(String userEmail) {
-        return userRepository.findById(userEmail).orElseThrow();
-    }
+    public User getUser(String userEmail);
 }

@@ -35,7 +35,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-
+    // OAUTH 2.0 client
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     //security
     implementation 'org.springframework.boot:spring-boot-starter-security'
