@@ -87,8 +87,9 @@ public class UserController {
     @RequestMapping("/auth/success")
     public void kakaoLoginRedirect(@RequestParam String accessToken, @RequestParam String refreshToken, HttpServletResponse response) throws IOException {
 
-        response.addHeader("accessToken", accessToken);
-        response.addHeader("refreshToken", refreshToken);
-        response.sendRedirect("http://localhost:5173");
+        response.addHeader("access", accessToken);
+        response.addHeader("refresh", refreshToken);
+        String redirectUrl = "http://localhost:5173/kakao-login?access=" + accessToken + "&refresh=" + refreshToken;
+        response.sendRedirect(redirectUrl);
     }
 }
