@@ -18,7 +18,7 @@ import java.io.IOException;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final LoginService loginService;
-//    private static final String URI = "/auth/success";
+    private static final String URI = "/auth/success";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -30,13 +30,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         AccessRefreshToken tokens = loginService.processOAuth2User(oAuth2User);
 
         // 토큰 전달을 위한 redirect
-//        String redirectUrl = UriComponentsBuilder.fromUriString(URI)
-//                .queryParam("accessToken", tokens.getAccessToken())
-//                .queryParam("refreshToken", tokens.getRefreshToken())
-//                .build().toUriString();
-        response.addHeader("accessToken", tokens.getAccessToken());
-        response.addHeader("refreshToken", tokens.getRefreshToken());
+        String redirectUrl = UriComponentsBuilder.fromUriString(URI)
+                .queryParam("accessToken", tokens.getAccessToken())
+                .queryParam("refreshToken", tokens.getRefreshToken())
+                .build().toUriString();
+//        response.addHeader("accessToken", tokens.getAccessToken());
+//        response.addHeader("refreshToken", tokens.getRefreshToken());
 
-//        response.sendRedirect(redirectUrl);
+        response.sendRedirect(redirectUrl);
     }
 }
